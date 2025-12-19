@@ -1,68 +1,62 @@
 package entities;
 
+import exception.OperacaoInvalidaException;
+import exception.RecursoInsuficienteException;
+
 public class PetMachine {
 
     private int nivelAtualAgua = 0;
     private int nivelAtualShampoo = 0;
     private int quantAtualPet = 0;
-
     private boolean petEstaLimpo = false;
 
-    public int getNivelAtualAgua() {
-        return this.nivelAtualAgua;
-    }
+    // O abastecimento de água e shampoo deve permitir 2 litros por vez;
+    final int ABASTECER_AGUA = 2;
+    final int ABASTECER_SHAMPOO = 2;
+
+    // A máquina tem capacidade máxima de 30 litros de água e 10 litros de shampoo;
+    final int CAP_MAX_AGUA = 30;
+    final int CAP_MAX_SHAMPOO = 10;
+
+    // Cada banho realizado irá consumir 10 litros de água e 2 litros de shampoo;
+    final int GASTO_AGUA_BANHO = 10;
+    final int GASTO_SHAMPOO_BANHO = 2;
+
+    private static final int GASTO_AGUA_LIMPEZA = 3;
+    private static final int GASTO_SHAMPOO_LIMPEZA = 1;
 
     public void darBanhoPet() {
-
-        final int GASTO_AGUA = 10;
-        final int GASTO_SHAMPOO = 2;
-
-        if (nivelAtualAgua < GASTO_AGUA) {
-
-            System.out.println("Desculpe o seu nivel de agua esta abaixo do permitido para dar banho!");
-            return;
-
-        } else if (nivelAtualShampoo < GASTO_SHAMPOO) {
-
-            System.out.println("Desculpe o seu nivel de shampoo esta abaixo do permitido para dar banho!");
-            return;
-
-        } else if (quantAtualPet == 0) {
-
-            System.out.println("Desculpe a maquina esta vazia, adicionar o pet para dar banho");
-
-        } else {
-
-            System.out.println("Dando banho no pet: au au");
-            nivelAtualAgua -= 10;
-            nivelAtualShampoo -= 2;
-            petEstaLimpo = true;
-
+        if (quantAtualPet == 0) {
+            throw new OperacaoInvalidaException("Não há pet na máquina para dar banho.");
         }
 
+        if (nivelAtualAgua < GASTO_AGUA_BANHO) {
+            throw new RecursoInsuficienteException(
+                    "Água insuficiente para banho. Necessário: 10L, disponível: " + nivelAtualAgua + "L");
+        }
+        if (nivelAtualShampoo < GASTO_SHAMPOO_BANHO) {
+            throw new RecursoInsuficienteException(
+                    "Shampoo insuficiente para banho. Necessário: 2L, disponível: " + nivelAtualShampoo + "L");
+        }
+
+        nivelAtualAgua -= GASTO_AGUA_BANHO;
+        nivelAtualShampoo -= GASTO_SHAMPOO_BANHO;
+        petEstaLimpo = true;
+
+        System.out.println("Maquina tocando: Tchau sujeira!\nAdeus cheirinho de suor! 🐶");
+        System.out.println("Banho concluído com sucesso!");
     }
 
-    // O abastecimento de água e shampoo deve permitir 2 litros por vez que for
-    // acionado;
     public void abastecerAgua() {
 
-        final int ABASTECER_AGUA = 2;
-        final int CAP_MAX_AGUA = 30;
+        if (nivelAtualAgua + ABASTECER_AGUA > CAP_MAX_AGUA) {
 
-        if (nivelAtualAgua > CAP_MAX_AGUA) {
-
-            getNivelAtualAgua();
-
-            System.out.println("Desculpe seu nivel atual de agua ultrapassa o limite maximo de 30");
-            return;
+            throw new OperacaoInvalidaException("Desculpe seu nivel atual de agua ultrapassa o limite maximo de 30L");
 
         } else {
 
-            System.out.println("Voce esta abastecendo de agua:");
-
             nivelAtualAgua += ABASTECER_AGUA;
-
-            System.out.println("Nivel atual de agua: " + getNivelAtualAgua());
+            System.out.println("Abastecendo 2L de água. Nível atual: " + nivelAtualAgua + "L");
 
         }
 
@@ -70,20 +64,16 @@ public class PetMachine {
 
     public void abastecerShampoo() {
 
-        // O abastecimento de água e shampoo deve permitir 2 litros por vez que for
-        // acionado;
-        final int CAP_MAX_SHAMPOO = 10;
-        final int ABASTECER_SHAMPOO = 2;
+        if (nivelAtualShampoo + ABASTECER_SHAMPOO > CAP_MAX_SHAMPOO) {
 
-        if (nivelAtualShampoo > CAP_MAX_SHAMPOO) {
-
-            System.out.println("Desculpe seu nivel atual de shampoo ultrapassa o limite maximo de 10");
-            return;
+            throw new OperacaoInvalidaException(
+                    "Desculpe seu nivel atual de shampoo ultrapassa o limite maximo de 10L");
 
         } else {
 
-            System.out.println("abastecendo o nivel de shampoo");
             nivelAtualShampoo += ABASTECER_SHAMPOO;
+            System.out.println("Abastecendo 2L de shampoo. Nível atual: " + nivelAtualShampoo + "L");
+
         }
     }
 
@@ -103,46 +93,49 @@ public class PetMachine {
         // A maquina de banho deve permitir somente 1 pet por vez;
         if (quantAtualPet >= 1) {
 
-            System.out.println("Desculpe só e permitido a entrada de 1 pet por vez");
-            return;
+            throw new OperacaoInvalidaException("Desculpe só e permitido a entrada de 1 pet por vez");
 
         } else {
 
-            System.out.println("Colocando pet dentro da maquina!");
-
-            quantAtualPet = +1;
+            quantAtualPet = 1;
+            petEstaLimpo = false;
+            System.out.println("Pet colocado na máquina com sucesso!");
 
         }
 
     }
 
     public void retirarPetMaquina() {
-        // Se o pet for retirado da maquina sem estar limpo será necessário limpar a
-        // máquina para permitir a entrada de outro pet;
-        if (quantAtualPet == 1) {
-            quantAtualPet -= 1;
+
+        if (quantAtualPet == 0) {
+            throw new OperacaoInvalidaException("Não há pet na máquina para retirar.");
         }
 
         if (!petEstaLimpo) {
-            System.out.println("Pet esta sujo, retirando e limpando a maquina");
-            return;
+            System.out.println("Atenção: Pet retirado sujo! A máquina precisa ser limpa antes do próximo uso.");
+        } else {
+            System.out.println("Pet limpo retirado com sucesso!");
         }
 
-        System.out.println("retirando o pet");
-        quantAtualPet -= 1;
+        quantAtualPet = 0;
+        System.out.println("Retirando o Pet de dentro da Maquina!");
 
     }
 
     public void limparMaquina() {
-
-        if (quantAtualPet == 1) {
-            System.out.println("Desculpe para limpar a maquina não pode ter nenhum pet dentro");
+        if (quantAtualPet > 0) {
+            throw new OperacaoInvalidaException("Não é possível limpar a máquina com um pet dentro.");
+        }
+        if (nivelAtualAgua < GASTO_AGUA_LIMPEZA) {
+            throw new RecursoInsuficienteException("Água insuficiente para limpeza (precisa de 3L).");
+        }
+        if (nivelAtualShampoo < GASTO_SHAMPOO_LIMPEZA) {
+            throw new RecursoInsuficienteException("Shampoo insuficiente para limpeza (precisa de 1L).");
         }
 
-        // A limpeza da máquina ira consumir 3 litros de água e 1 litro de shampoo;
-        nivelAtualAgua -= 3;
-        nivelAtualShampoo -= 1;
-        System.out.println("Limpeza da Maquina concluida com sucesso!");
+        nivelAtualAgua -= GASTO_AGUA_LIMPEZA;
+        nivelAtualShampoo -= GASTO_SHAMPOO_LIMPEZA;
+        System.out.println("Limpeza da máquina concluída com sucesso!");
     }
 
 }
