@@ -1,4 +1,4 @@
-package br.com.zpx;
+package br.com.zpx.petshop;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
