@@ -5,6 +5,8 @@ import exception.RecursoInsuficienteException;
 public class Main {
     public static void main(String[] args) throws Exception {
 
+        // exercicio resolvido
+
         PetMachine petMachine = new PetMachine();
 
         try {
