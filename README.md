@@ -1,88 +1,132 @@
+<div align="center">
+  <img src="https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 17">
+  <img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven">
+  <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit 5">
+  <img src="https://img.shields.io/badge/JaCoCo-3775A9?style=for-the-badge&logo=jacoco&logoColor=white" alt="JaCoCo">
+  <img src="https://img.shields.io/badge/SLF4J-Logging-blue?style=for-the-badge" alt="SLF4J">
+</div>
+
 # PetShop Máquina de Banho 🛁🐶
 
-**Projeto de estudo em Java com arquitetura limpa, boas práticas e testes unitários.**
+**Simulador simples de uma máquina automática de banho para pets em Java.**
 
-Uma máquina automática de banho para pets que começou como exercício simples de POO e evoluiu para código **testado e organizado**.
+Projeto de estudo criado para praticar programação orientada a objetos e boas práticas de desenvolvimento backend. Começou como um exercício básico e virou um código organizado, testado e fácil de entender.
 
-### Objetivo do Projeto
+Qualquer pessoa consegue compreender o que faz, e recrutadores veem rapidamente as habilidades técnicas aplicadas.
 
-Consolidar conceitos fundamentais de Java de forma progressiva:
+[Índice](#índice) • [O que faz](#o-que-o-projeto-faz) • [Regras](#regras-simplificadas) • [Tecnologias](#tecnologias) • [Estrutura](#estrutura-do-código) • [Como rodar](#como-rodar) • [Testes](#testes) • [Contato](#contato)
 
-- Orientação a Objetos sólida
-- Princípios SOLID e separação de responsabilidades
-- Injeção de dependências manual (construtor)
-- Tratamento de erros com exceções personalizadas
-- Logging profissional com SLF4J
-- Organização de constantes
-- Gerenciamento de dependências e build com **Maven**
-- **Testes unitários automatizados** com JUnit 5
-- Relatório de cobertura com **JaCoCo**
+## Índice
 
-### Regras de Negócio da Máquina
+- [O que o projeto faz](#o-que-o-projeto-faz)
+- [Regras simplificadas](#regras-simplificadas)
+- [Tecnologias usadas](#tecnologias-usadas)
+- [Estrutura do código](#estrutura-do-código)
+- [Como rodar o projeto](#como-rodar-o-projeto)
+- [Testes e cobertura](#testes-e-cobertura)
+- [Contato e feedback](#contato-e-feedback)
 
-- Apenas **1 pet por vez**
-- Banho consome **10L de água** e **2L de shampoo**
-- Capacidade máxima: **30L de água** e **10L de shampoo**
-- Abastecimento adiciona **2L por vez**
-- Pet retirado sujo → máquina deve ser limpa antes do próximo uso
-- Limpeza consome **3L de água** e **1L de shampoo**
-- Não é possível limpar com pet dentro
+## O que o projeto faz
 
-### Arquitetura do Projeto (Clean Architecture)
+Simula uma máquina automática de banho para pets (cães e gatos). Você pode:
 
-```
-src/main/java/br/com/zpx/petshop/
-├── domain/          → Entidade pura (estado da máquina)
-├── config/          → Constantes (classe final com construtor privado)
-├── exception/       → Exceções personalizadas de domínio
-├── service/         → Interface + Implementação (lógica de negócio + logging)
-└── presentation/    → DemoConsole (exemplo de uso manual)
-```
+- Abastecer água e shampoo
+- Colocar um pet para tomar banho
+- Iniciar o banho
+- Retirar o pet (sujo ou limpo)
+- Limpar a máquina quando necessário
 
-### Tecnologias e Boas Práticas
+A máquina tem regras realistas: não dá banho sem água ou shampoo suficiente, não limpa com pet dentro, etc. Tudo é validado automaticamente.
 
-- **Java 17**
-- **Maven** (build e dependências)
-- **SLF4J + simple** (logging com níveis INFO/WARN/ERROR)
-- **JUnit 5** (testes unitários)
-- **JaCoCo** (cobertura de testes)
+Ótimo exemplo de como modelar um sistema pequeno com regras de negócio claras.
+
+## Regras simplificadas
+
+- Só **1 pet por vez** dentro da máquina.
+- Cada banho usa **10 litros de água** e **2 litros de shampoo**.
+- Capacidade máxima: **30L de água** e **10L de shampoo**.
+- Abastecimento adiciona **2L por vez** (de água ou shampoo).
+- Se o pet sair **sujo** (banho não concluído), a máquina fica suja e precisa ser limpa antes do próximo uso.
+- Limpeza gasta **3L de água** e **1L de shampoo**.
+- Não é possível limpar com um pet dentro.
+
+O código impede ações inválidas e avisa com mensagens claras.
+
+## Tecnologias usadas
+
+- **Java 17** → linguagem principal
+- **Maven** → organiza o projeto e as dependências
+- **SLF4J** → logs profissionais no console
+- **JUnit 5** → testes unitários automáticos
+- **JaCoCo** → mede a cobertura de testes
+
+Boas práticas aplicadas:
+
+- Princípios SOLID
 - Injeção de dependências manual
-- Programação para interfaces
 - Exceções personalizadas
 - Constantes centralizadas
+- Programação para interfaces
+- Arquitetura limpa (Clean Architecture)
 
-### Cobertura de Testes (JaCoCo)
+## Estrutura do código
 
-> (Gerado localmente com `mvn clean test jacoco:report`)
+Tudo bem separado para facilitar a leitura e manutenção:
 
-### Como Executar
+```
+
+src/main/java/br/com/zpx/petshop/
+├── domain/ → Classe principal da máquina (guarda o estado)
+├── config/ → Constantes do sistema
+├── exception/ → Erros personalizados
+├── service/ → Regras de negócio + logs
+└── presentation/ → DemoConsole (exemplo de uso no terminal)
+
+```
+
+## Como rodar o projeto
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/petshop-maquina-banho.git
+   cd petshop-maquina-banho
+   ```
+
+````
+
+2. Rode os testes (sempre bom verificar):
+
+   ```bash
+   mvn clean test
+   ```
+
+3. Execute a demonstração no console:
+   ```bash
+   mvn exec:java -Dexec.mainClass="br.com.zpx.petshop.presentation.DemoConsole"
+   ```
+
+Você verá logs como estes:
+
+```
+[INFO] Abastecendo 2L de água. Nível atual: 30L
+[INFO] Seu Pet foi colocado na Maquina com sucesso!
+[INFO] Maquina tocando: Tchau sujeira!
+[INFO] Banho concluido com sucesso, volte sempre!
+```
+
+Siga as opções no menu para testar todos os cenários!
+
+## Testes e cobertura
+
+Todas as regras importantes estão cobertas por testes unitários.
+Cobertura alta nas partes críticas do código.
+
+Para ver o relatório localmente:
 
 ```bash
-# Rodar testes unitários
-mvn clean test
-
-# Executar demo no console
-mvn exec:java -Dexec.mainClass="br.com.zpx.petshop.presentation.DemoConsole"
+mvn clean test jacoco:report
 ```
 
-### Exemplo de Logs (demo console)
+Abra o arquivo `target/site/jacoco/index.html` no navegador.
 
-```
-[main] INFO  br.com.zpx.petshop.service.PetMachineServiceImpl - Abastecendo 2L de água. Nível atual: 30L
-[main] INFO  br.com.zpx.petshop.service.PetMachineServiceImpl - Seu Pet foi colocado na Maquina com sucesso!
-[main] INFO  br.com.zpx.petshop.service.PetMachineServiceImpl - Maquina tocando: Tchau sujeira!
-[main] INFO  br.com.zpx.petshop.service.PetMachineServiceImpl - Banho concluido com sucesso, volte sempre!
-```
-
-### Próximos Passos Planejados
-
-- Transformar em API REST com Javalin (JSON, HTTP status, DTOs)
-- Migrar para Spring Boot completo
-- Adicionar testes de integração
-- Documentação com OpenAPI/Swagger
-
----
-
-**Projeto feito com dedicação como parte da jornada de aprendizado em Java backend.**
-
-Feedback e sugestões são super bem-vindos! 🚀
+````
